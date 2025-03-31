@@ -9,19 +9,19 @@ number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: WG Working Group
+area: ""
+workgroup: "Network Address Translators"
 keyword:
  - next generation
  - unicorn
  - sparkling distributed ledger
 venue:
-  group: WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  group: "Network Address Translators"
+  type: ""
+  mail: "nat@ietf.org"
+  arch: "ftp://ftp.ietf.org/ietf-mail-archive/nat/"
+  github: "Daniel-McLarty/NAT-Sub-Address-Protocol"
+  latest: "https://Daniel-McLarty.github.io/NAT-Sub-Address-Protocol/draft-mclarty-nat-sub-address-protocol.md.html"
 
 author:
  -
