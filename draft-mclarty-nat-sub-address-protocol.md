@@ -26,8 +26,8 @@ venue:
 author:
  -
     fullname: "Daniel McLarty"
-    organization: Your Organization Here
-    email: "143743404+Daniel-McLarty@users.noreply.github.com"
+    organization: Independent
+    email: "daniel@mclarty.tech"
 
 normative:
 
