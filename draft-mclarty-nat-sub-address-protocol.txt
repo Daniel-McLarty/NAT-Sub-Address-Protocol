@@ -2,14 +2,14 @@
 
 
 
-WG Working Group                                              Y. N. Here
-Internet-Draft                                    Your Organization Here
+Network Address Translators                                   D. McLarty
+Internet-Draft                                               Independent
 Intended status: Informational                             31 March 2025
 Expires: 2 October 2025
 
 
                         NAT Sub Address Protocol
-                  draft-todo-yourname-protocol-latest
+             draft-mclarty-nat-sub-address-protocol-latest
 
 Abstract
 
@@ -19,17 +19,19 @@ About This Document
 
    This note is to be removed before publishing as an RFC.
 
-   The latest revision of this draft can be found at
-   https://example.com/LATEST.  Status information for this document may
-   be found at https://datatracker.ietf.org/doc/draft-todo-yourname-
-   protocol/.
+   The latest revision of this draft can be found at https://Daniel-
+   McLarty.github.io/NAT-Sub-Address-Protocol/draft-mclarty-nat-sub-
+   address-protocol.md.html.  Status information for this document may
+   be found at https://datatracker.ietf.org/doc/draft-mclarty-nat-sub-
+   address-protocol/.
 
-   Discussion of this document takes place on the WG Working Group
-   mailing list (mailto:WG@example.com), which is archived at
-   https://example.com/WG.
+   Discussion of this document takes place on the Network Address
+   Translators mailing list (mailto:nat@ietf.org), which is archived at
+   ftp://ftp.ietf.org/ietf-mail-archive/nat/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/nat/.
 
    Source for this draft and an issue tracker can be found at
-   https://github.com/USER/REPO.
+   https://github.com/Daniel-McLarty/NAT-Sub-Address-Protocol.
 
 Status of This Memo
 
@@ -109,6 +111,6 @@ Acknowledgments
 
 Author's Address
 
-   Your Name Here
-   Your Organization Here
-   Email: your.email@example.com
+   Daniel McLarty
+   Independent
+   Email: daniel@mclarty.tech
