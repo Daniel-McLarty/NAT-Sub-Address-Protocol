@@ -3,7 +3,7 @@ title: NAT Sub Address Protocol
 abbrev: NATSAP
 category: info
 
-docname: draft-mclarty-nat-sub-address-protocol.md-latest
+docname: draft-mclarty-nat-sub-address-protocol-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -26,8 +26,8 @@ venue:
 author:
  -
     fullname: "Daniel McLarty"
-    organization: Your Organization Here
-    email: "143743404+Daniel-McLarty@users.noreply.github.com"
+    organization: Independent
+    email: "daniel@mclarty.tech"
 
 normative:
 
