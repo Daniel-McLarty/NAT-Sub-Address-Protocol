@@ -1,0 +1,83 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2025-04-01T01:49:33.863333+00:00",
+  "repo": "Daniel-McLarty/NAT-Sub-Address-Protocol",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOORrzzc6QzA7R",
+      "title": "Update Contact Info",
+      "url": "https://github.com/Daniel-McLarty/NAT-Sub-Address-Protocol/pull/1",
+      "state": "MERGED",
+      "author": "Daniel-McLarty",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Update contact info and see if build works",
+      "createdAt": "2025-03-31T15:42:12Z",
+      "updatedAt": "2025-03-31T15:46:51Z",
+      "baseRepository": "Daniel-McLarty/NAT-Sub-Address-Protocol",
+      "baseRefName": "main",
+      "baseRefOid": "3f358781049bc05ee95aa7e94e63bc00b3891340",
+      "headRepository": "Daniel-McLarty/NAT-Sub-Address-Protocol",
+      "headRefName": "Daniel-McLarty-patch-1",
+      "headRefOid": "39081b0e5174d5e607eb6342d22eaa8f515fd270",
+      "closedAt": "2025-03-31T15:46:40Z",
+      "mergedAt": "2025-03-31T15:46:40Z",
+      "mergedBy": "Daniel-McLarty",
+      "mergeCommit": {
+        "oid": "e3108fae29bb061df2e77dc7e59bf046936b65cd"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
