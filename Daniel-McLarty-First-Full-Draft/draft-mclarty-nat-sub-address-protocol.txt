@@ -1,0 +1,235 @@
+
+
+
+
+Network Address Translators                                   D. McLarty
+Internet-Draft                                               Independent
+Intended status: Informational                              1 April 2025
+Expires: 3 October 2025
+
+
+                        NAT Sub Address Protocol
+             draft-mclarty-nat-sub-address-protocol-latest
+
+Abstract
+
+   This document defines the NAT Sub-Address Protocol (NATSAP), a Layer
+   5 encapsulation protocol designed to facilitate seamless
+   bidirectional communication with devices behind Carrier-Grade NAT (CG
+   NAT).  NATSAP introduces dynamic sub-addresses assigned by the NAT
+   router, which external clients can use alongside the public IP to
+   route traffic back to internal devices without requiring traditional
+   port forwarding.  This document also defines the Dynamic Sub-Address
+   Assignemnt Protocol (DSAAP), to facilitate the acquiring of a NATSAP
+   Sub-Address.
+
+   The protocol offers backward compatibility with existing IPv4
+   infrastructure, efficient DNS-based service discovery, and simple,
+   stateless mapping.  By encapsulating application-layer traffic,
+   NATSAP enables direct communication with devices behind NATs using a
+   standardized socket notation and DNS records.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at https://Daniel-
+   McLarty.github.io/NAT-Sub-Address-Protocol/draft-mclarty-nat-sub-
+   address-protocol.html.  Status information for this document may be
+   found at https://datatracker.ietf.org/doc/draft-mclarty-nat-sub-
+   address-protocol/.
+
+   Discussion of this document takes place on the Network Address
+   Translators mailing list (mailto:nat@ietf.org), which is archived at
+   ftp://ftp.ietf.org/ietf-mail-archive/nat/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/nat/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/Daniel-McLarty/NAT-Sub-Address-Protocol.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 3 October 2025.
+
+Copyright Notice
+
+   Copyright (c) 2025 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  Protocol Overview
+   4.  NATSAP Header Format
+     4.1.  Field Descriptions
+   5.  Security Considerations
+   6.  IANA Considerations
+   7.  Normative References
+   Acknowledgments
+   Author's Address
+
+1.  Introduction
+
+   The proliferation of Carrier-Grade NAT (CG NAT) in IPv4 networks has
+   made it increasingly difficult for devices behind NATs to host
+   services.  Traditional NAT traversal techniques, such as port
+   forwarding, STUN, TURN, and UPnP, are cumbersome, inconsistent, and
+   difficult to automate.
+
+   NATSAP addresses this issue by introducing:
+
+   *  Dynamic sub-addresses, automatically assigned by the NAT router
+      using DSAAP.
+
+   *  Encapsulation at Layer 5, allowing transparent traversal of NAT
+      devices.
+
+   *  DNS integration for seamless service discovery.
+
+   *  Backward compatibility with existing network infrastructure.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+   NATSAP:: NAT Sub-Address Protocol DSAAP:: Dynamic Sub-Address
+   Assignment Protocol CG NAT:: Carrier-Grade Network Address
+   Translation Sub-Addres:: A unique 32-bit identifier assigned by the
+   NAT router to an internal device.  NATSAP Table:: A mapping table in
+   the NAT router that associates sub-addresses with internal IPs.
+
+3.  Protocol Overview
+
+   ## Protocol Flow 1.  Client Initialization (DSAAP) * When a device
+   connects to the CG NAT network, it sends a DSAAP request to the
+   gateway router.  * The NAT router responds with a DSAAP reply,
+   assigning a 32-bit sub-address to the client.  * The client stores
+   the sub-address and uses it for external communication.
+
+   1.  Service Advertising (DNS)
+
+       *  The client (or DDNS service) updates the NATSAP TXT record in
+          DNS with its current sub-address.
+
+       *  Example DNS record: A: example.com → 203.0.113.5 TXT:
+          _natsap.example.com → "example.com, ABCD-1234"
+
+   2.  Third-Party Client Connection
+
+       *  The external client resolves the public IP via the A record.
+
+       *  It looks up the _natsap TXT record for the sub-address.
+
+       *  It forms the NATSAP socket: ` natsap://203.0.113.5[ABCD-
+          1234]:443 `
+
+   3.  NATSAP Encapsulation
+
+       *  The external client encapsulates its application-layer traffic
+          inside a NATSAP packet.
+
+       *  The CG NAT router receives the packet, extracts the sub-
+          address, and performs a table lookup to route the traffic to
+          the appropriate internal device.
+
+       *  The router de-encapsulates the traffic and forwards it to the
+          internal client.
+
+       *  On the return path, the router re-encapsulates the response
+          and sends it back to the external client.
+
+4.  NATSAP Header Format
+
+   ## NATSAP Header Structure | Field Name | |:-------------------------
+   -----------------------------------------:| | Version (8 bits) | |
+   Flags (8 bits) | | Sub-Address (32 bits) | | Encapsulated Destination
+   Port (16 bits) | | Encapsulated Data Length in bytes (32 bits) | |
+   Encapsulated Application-Layer Traffic |
+
+4.1.  Field Descriptions
+
+   *  Version: NATSAP protocol version (e.g., 0x01).
+
+   *  Flags: Reserved for future extensions.
+
+   *  Sub-Address: The 32-bit sub-address assigned by the NAT router.
+
+   *  Encapsulated Destination Port: The original application port.
+
+   *  Encapsulated Data Length: Length of the encapsulated payload.
+
+   *  Encapsulated Data: The original application-layer traffic.
+
+5.  Security Considerations
+
+   1.  Sub-Address Privacy:
+
+       *  Sub-addresses are public, similar to ports.
+
+       *  Applications should use existing encryption protocols (e.g.,
+          TLS) for security.
+
+   2.  Rate Limiting:
+
+       *  The CG NAT router should rate-limit DSAAP requests to prevent
+          abuse.
+
+   3.  Expiration and Reuse:
+
+       *  Sub-addresses should have a lease time to prevent stale
+          mappings.
+
+       *  Routers should implement keep-alive mechanisms to verify
+          active clients.
+
+6.  IANA Considerations
+
+   This document has no IANA actions.
+
+7.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+Acknowledgments
+
+   TODO acknowledge.
+
+Author's Address
+
+   Daniel McLarty
+   Independent
+   Email: daniel@mclarty.tech
