@@ -82,7 +82,7 @@ NATSAP Table::
     * The client (or DDNS service) updates the NATSAP TXT record in DNS with its current sub-address.
     * Example DNS record:
     ```
-    A: example.com → 203.0.113.5    
+    A: example.com → 203.0.113.5
     TXT: _natsap.example.com → "example.com, ABCD-1234"
     ```
 
