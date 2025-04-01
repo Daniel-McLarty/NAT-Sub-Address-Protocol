@@ -20,7 +20,7 @@ Abstract
    router, which external clients can use alongside the public IP to
    route traffic back to internal devices without requiring traditional
    port forwarding.  This document also defines the Dynamic Sub-Address
-   Assignemnt Protocol (DSAAP), to facilitate the acquiring of a NATSAP
+   Assignment Protocol (DSAAP), to facilitate the acquiring of a NATSAP
    Sub-Address.
 
    The protocol offers backward compatibility with existing IPv4
@@ -85,12 +85,18 @@ Table of Contents
    3.  Protocol Overview
      3.1.  Protocol Flow
    4.  NATSAP Header Format
-   5.  Security Considerations
-     5.1.  Sub-Address Privacy
-     5.2.  Rate Limiting
-     5.3.  Expiration and Reuse
-   6.  IANA Considerations
-   7.  Normative References
+   5.  DNS Integration
+     5.1.  DNS Record Format
+     5.2.  Example DNS Records
+   6.  Socket Addressing Scheme
+   7.  Dynamic Sub-Address Assignment Protocol (DSAAP)
+   8.  Security Considerations
+     8.1.  Sub-Address Privacy
+   9.  Backward Compatibility
+     9.1.  Rate Limiting
+     9.2.  Expiration and Reuse
+   10. IANA Considerations
+   11. Normative References
    Acknowledgments
    Author's Address
 
@@ -151,12 +157,12 @@ Table of Contents
 
    2.  Service Advertising (DNS)
 
-       *  The client (or DDNS service) updates the NATSAP TXT record in
-          DNS with its current sub-address.
+       *  The client updates the NATSAP TXT record in DNS with its
+          current sub-address.
 
        *  Example DNS record:
 
-   A: example.com → 203.0.113.5 TXT: _natsap.example.com → "example.com,
+   A: example.com → 192.0.2.20 TXT: _natsap.example.com → "example.com,
    ABCD-1234"
 
    1.  Third-Party Client Connection
@@ -176,11 +182,16 @@ Table of Contents
           address, and performs a table lookup to route the traffic to
           the appropriate internal device.
 
-       *  The router de-encapsulates the traffic and forwards it to the
-          internal client.
+       *  The router forwards the traffic to the internal client.
 
-       *  On the return path, the router re-encapsulates the response
-          and sends it back to the external client.
+       *  The internal client de-encapsulates the NATSAP packet and
+          treats the application-layer traffic like normal.
+
+       *  The internal client then sends a standard reply to the
+          external client.
+
+       *  If the external client has to send new traffic to the internal
+          client the external client will build a new NATSAP packet.
 
 4.  NATSAP Header Format
 
@@ -203,32 +214,75 @@ Table of Contents
 
                                   Table 1
 
-5.  Security Considerations
+5.  DNS Integration
 
-5.1.  Sub-Address Privacy
+   NATSAP uses DNS TXT records for service discovery.
+
+5.1.  DNS Record Format
+
+   *  A record: The public IP of the CG NAT router.
+
+   *  TXT record:
+
+      -  Name: _natsap.FQDN
+
+      -  Value: "FQDN, sub-address"
+
+5.2.  Example DNS Records
+
+   A: example.com → 192.0.2.20 TXT: _natsap.example.com → "example.com,
+   ABCD-1234" Clients use the A record to find the public IP and the TXT
+   record to retrieve the sub-address.
+
+6.  Socket Addressing Scheme
+
+   NATSAP defines a new URI format for addressing services:
+
+   natsap://<public-ip>[<sub-address>]:<original-port>
+
+   Example URI: natsap://192.0.2.20[ABCD-1234]:443
+
+7.  Dynamic Sub-Address Assignment Protocol (DSAAP)
+
+   TODO DSAAP
+
+8.  Security Considerations
+
+8.1.  Sub-Address Privacy
 
    *  Sub-addresses are public, similar to ports.
 
    *  Applications should use existing encryption protocols (e.g., TLS)
       for security.
 
-5.2.  Rate Limiting
+9.  Backward Compatibility
+
+   NATSAP is backward-compatible with existing IPv4 infrastructure:
+
+   *  No modifications to Layer 3 or Layer 4 protocols are required.
+
+   *  Non-NATSAP routers will simply drop unrecognized NATSAP packets.
+
+   *  Services using traditional ports remain unaffected.
+
+9.1.  Rate Limiting
 
    *  The CG NAT router should rate-limit DSAAP requests to prevent
       abuse.
 
-5.3.  Expiration and Reuse
+9.2.  Expiration and Reuse
 
    *  Sub-addresses should have a lease time to prevent stale mappings.
 
    *  Routers should implement keep-alive mechanisms to verify active
       clients.
 
-6.  IANA Considerations
+10.  IANA Considerations
 
-   This document has no IANA actions.
+   IANA may need to register both a TCP and UDP port to NATSAP.  IANA
+   may need to register a UDP port to DSAAP.
 
-7.  Normative References
+11.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
