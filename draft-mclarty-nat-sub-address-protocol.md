@@ -10,17 +10,17 @@ date:
 consensus: true
 v: 3
 area: ""
-workgroup: "Network Address Translators"
+workgroup: "INTAREA"
 keyword:
  - NATSAP
  - DSAAP
  - NATSAP Sub-Address
  - CG NAT
 venue:
-  group: "Network Address Translators"
-  type: ""
-  mail: "nat@ietf.org"
-  arch: "ftp://ftp.ietf.org/ietf-mail-archive/nat/"
+  group: "INTAREA"
+  type: "Working Group"
+  mail: "int-area@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/int-area/"
   github: "Daniel-McLarty/NAT-Sub-Address-Protocol"
   latest: "https://Daniel-McLarty.github.io/NAT-Sub-Address-Protocol/draft-mclarty-nat-sub-address-protocol.html"
 
