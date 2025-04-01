@@ -83,9 +83,14 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  Protocol Overview
+     3.1.  Protocol Flow
    4.  NATSAP Header Format
-     4.1.  Field Descriptions
+     4.1.  NATSAP Header Structure
+     4.2.  Field Descriptions
    5.  Security Considerations
+     5.1.  Sub-Address Privacy
+     5.2.  Rate Limiting
+     5.3.  Expiration and Reuse
    6.  IANA Considerations
    7.  Normative References
    Acknowledgments
@@ -119,21 +124,34 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   NATSAP:: NAT Sub-Address Protocol DSAAP:: Dynamic Sub-Address
-   Assignment Protocol CG NAT:: Carrier-Grade Network Address
-   Translation Sub-Addres:: A unique 32-bit identifier assigned by the
-   NAT router to an internal device.  NATSAP Table:: A mapping table in
-   the NAT router that associates sub-addresses with internal IPs.
+   *  *NATSAP*: NAT Sub-Address Protocol
+
+   *  *DSAAP*: Dynamic Sub-Address Assignment Protocol
+
+   *  *CG NAT*: Carrier-Grade Network Address Translation
+
+   *  *Sub-Address*: A unique 32-bit identifier assigned by the NAT
+      router to an internal device.
+
+   *  *NATSAP Table*: A mapping table in the NAT router that associates
+      sub-addresses with internal IPs.
 
 3.  Protocol Overview
 
-   ## Protocol Flow 1.  Client Initialization (DSAAP) * When a device
-   connects to the CG NAT network, it sends a DSAAP request to the
-   gateway router.  * The NAT router responds with a DSAAP reply,
-   assigning a 32-bit sub-address to the client.  * The client stores
-   the sub-address and uses it for external communication.
+3.1.  Protocol Flow
 
-   1.  Service Advertising (DNS)
+   1.  Client Initialization (DSAAP)
+
+       *  When a device connects to the CG NAT network, it sends a DSAAP
+          request to the gateway router.
+
+       *  The NAT router responds with a DSAAP reply, assigning a 32-bit
+          sub-address to the client.
+
+       *  The client stores the sub-address and uses it for external
+          communication.
+
+   2.  Service Advertising (DNS)
 
        *  The client (or DDNS service) updates the NATSAP TXT record in
           DNS with its current sub-address.
@@ -141,16 +159,16 @@ Table of Contents
        *  Example DNS record: A: example.com → 203.0.113.5 TXT:
           _natsap.example.com → "example.com, ABCD-1234"
 
-   2.  Third-Party Client Connection
+   3.  Third-Party Client Connection
 
        *  The external client resolves the public IP via the A record.
 
        *  It looks up the _natsap TXT record for the sub-address.
 
-       *  It forms the NATSAP socket: ` natsap://203.0.113.5[ABCD-
-          1234]:443 `
+       *  It forms the NATSAP socket: natsap://203.0.113.5[ABCD-
+          1234]:443
 
-   3.  NATSAP Encapsulation
+   4.  NATSAP Encapsulation
 
        *  The external client encapsulates its application-layer traffic
           inside a NATSAP packet.
@@ -167,47 +185,60 @@ Table of Contents
 
 4.  NATSAP Header Format
 
-   ## NATSAP Header Structure | Field Name | |:-------------------------
-   -----------------------------------------:| | Version (8 bits) | |
-   Flags (8 bits) | | Sub-Address (32 bits) | | Encapsulated Destination
-   Port (16 bits) | | Encapsulated Data Length in bytes (32 bits) | |
-   Encapsulated Application-Layer Traffic |
+4.1.  NATSAP Header Structure
 
-4.1.  Field Descriptions
+              +=============================================+
+              |                  Field Name                 |
+              +=============================================+
+              |               Version (8 bits)              |
+              +---------------------------------------------+
+              |                Flags (8 bits)               |
+              +---------------------------------------------+
+              |            Sub-Address (32 bits)            |
+              +---------------------------------------------+
+              |   Encapsulated Destination Port (16 bits)   |
+              +---------------------------------------------+
+              | Encapsulated Data Length in bytes (32 bits) |
+              +---------------------------------------------+
+              |    Encapsulated Application-Layer Traffic   |
+              +---------------------------------------------+
 
-   *  Version: NATSAP protocol version (e.g., 0x01).
+                                  Table 1
 
-   *  Flags: Reserved for future extensions.
+4.2.  Field Descriptions
 
-   *  Sub-Address: The 32-bit sub-address assigned by the NAT router.
+   *  *Version*: NATSAP protocol version (e.g., 0x01).
 
-   *  Encapsulated Destination Port: The original application port.
+   *  *Flags*: Reserved for future extensions.
 
-   *  Encapsulated Data Length: Length of the encapsulated payload.
+   *  *Sub-Address*: The 32-bit sub-address assigned by the NAT router.
 
-   *  Encapsulated Data: The original application-layer traffic.
+   *  *Encapsulated Destination Port*: The original application port.
+
+   *  *Encapsulated Data Length*: Length of the encapsulated payload.
+
+   *  *Encapsulated Data*: The original application-layer traffic.
 
 5.  Security Considerations
 
-   1.  Sub-Address Privacy:
+5.1.  Sub-Address Privacy
 
-       *  Sub-addresses are public, similar to ports.
+   *  Sub-addresses are public, similar to ports.
 
-       *  Applications should use existing encryption protocols (e.g.,
-          TLS) for security.
+   *  Applications should use existing encryption protocols (e.g., TLS)
+      for security.
 
-   2.  Rate Limiting:
+5.2.  Rate Limiting
 
-       *  The CG NAT router should rate-limit DSAAP requests to prevent
-          abuse.
+   *  The CG NAT router should rate-limit DSAAP requests to prevent
+      abuse.
 
-   3.  Expiration and Reuse:
+5.3.  Expiration and Reuse
 
-       *  Sub-addresses should have a lease time to prevent stale
-          mappings.
+   *  Sub-addresses should have a lease time to prevent stale mappings.
 
-       *  Routers should implement keep-alive mechanisms to verify
-          active clients.
+   *  Routers should implement keep-alive mechanisms to verify active
+      clients.
 
 6.  IANA Considerations
 
