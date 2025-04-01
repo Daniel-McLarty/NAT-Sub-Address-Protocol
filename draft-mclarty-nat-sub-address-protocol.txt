@@ -85,8 +85,6 @@ Table of Contents
    3.  Protocol Overview
      3.1.  Protocol Flow
    4.  NATSAP Header Format
-     4.1.  NATSAP Header Structure
-     4.2.  Field Descriptions
    5.  Security Considerations
      5.1.  Sub-Address Privacy
      5.2.  Rate Limiting
@@ -156,19 +154,20 @@ Table of Contents
        *  The client (or DDNS service) updates the NATSAP TXT record in
           DNS with its current sub-address.
 
-       *  Example DNS record: A: example.com → 203.0.113.5 TXT:
-          _natsap.example.com → "example.com, ABCD-1234"
+       *  Example DNS record:
 
-   3.  Third-Party Client Connection
+   A: example.com → 203.0.113.5 TXT: _natsap.example.com → "example.com,
+   ABCD-1234"
+
+   1.  Third-Party Client Connection
 
        *  The external client resolves the public IP via the A record.
 
        *  It looks up the _natsap TXT record for the sub-address.
 
-       *  It forms the NATSAP socket: natsap://203.0.113.5[ABCD-
-          1234]:443
+       *  It forms the NATSAP socket: natsap://192.0.2.20[ABCD-1234]:443
 
-   4.  NATSAP Encapsulation
+   2.  NATSAP Encapsulation
 
        *  The external client encapsulates its application-layer traffic
           inside a NATSAP packet.
@@ -185,39 +184,24 @@ Table of Contents
 
 4.  NATSAP Header Format
 
-4.1.  NATSAP Header Structure
-
-              +=============================================+
-              |                  Field Name                 |
-              +=============================================+
-              |               Version (8 bits)              |
-              +---------------------------------------------+
-              |                Flags (8 bits)               |
-              +---------------------------------------------+
-              |            Sub-Address (32 bits)            |
-              +---------------------------------------------+
-              |   Encapsulated Destination Port (16 bits)   |
-              +---------------------------------------------+
-              | Encapsulated Data Length in bytes (32 bits) |
-              +---------------------------------------------+
-              |    Encapsulated Application-Layer Traffic   |
-              +---------------------------------------------+
+       +===================+=======================================+
+       |     Field Name    | Description                           |
+       +===================+=======================================+
+       |  Version (8 bits) | NATSAP protocol version (e.g., 0x01). |
+       +-------------------+---------------------------------------+
+       |   Flags (8 bits)  | Reserved for future use.              |
+       +-------------------+---------------------------------------+
+       |  Destination Sub- | The Sub-Address of the server.        |
+       | Address (32 bits) |                                       |
+       +-------------------+---------------------------------------+
+       | Encapsulated Data | Length of the encapsulated payload in |
+       |  Length (16 bits) | bytes.                                |
+       +-------------------+---------------------------------------+
+       | Encapsulated Data | The original datagram traffic (e.g.,  |
+       |     (variable)    | https)                                |
+       +-------------------+---------------------------------------+
 
                                   Table 1
-
-4.2.  Field Descriptions
-
-   *  *Version*: NATSAP protocol version (e.g., 0x01).
-
-   *  *Flags*: Reserved for future extensions.
-
-   *  *Sub-Address*: The 32-bit sub-address assigned by the NAT router.
-
-   *  *Encapsulated Destination Port*: The original application port.
-
-   *  *Encapsulated Data Length*: Length of the encapsulated payload.
-
-   *  *Encapsulated Data*: The original application-layer traffic.
 
 5.  Security Considerations
 
