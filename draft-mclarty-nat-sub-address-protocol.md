@@ -44,7 +44,7 @@ The protocol offers backward compatibility with existing IPv4 infrastructure, ef
 
 --- middle
 
-# Section 1: Introduction
+# Introduction
 
 The proliferation of Carrier-Grade NAT (CG NAT) in IPv4 networks has made it increasingly difficult for devices behind NATs to host services. Traditional NAT traversal techniques, such as port forwarding, STUN, TURN, and UPnP, are cumbersome, inconsistent, and difficult to automate.
 
@@ -56,7 +56,7 @@ NATSAP addresses this issue by introducing:
 * Backward compatibility with existing network infrastructure.
 
 
-# Section 2: Conventions and Definitions
+# Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
 
@@ -71,8 +71,8 @@ Sub-Addres::
 NATSAP Table::
     A mapping table in the NAT router that associates sub-addresses with internal IPs.
 
-# Section 3: Protocol Overview
-## 3.1: Protocol Flow
+# Protocol Overview
+## Protocol Flow
 1. Client Initialization (DSAAP)
     * When a device connects to the CG NAT network, it sends a DSAAP request to the gateway router.
     * The NAT router responds with a DSAAP reply, assigning a 32-bit sub-address to the client.
@@ -97,8 +97,8 @@ NATSAP Table::
     * The router de-encapsulates the traffic and forwards it to the internal client.
     * On the return path, the router re-encapsulates the response and sends it back to the external client.
 
-# Section 4: NATSAP Header Format
-## 4.1: NATSAP Header Structure
+# NATSAP Header Format
+## NATSAP Header Structure
 | Field Name                                                         |
 |:------------------------------------------------------------------:|
 | Version (8 bits)                                                   |
@@ -108,7 +108,7 @@ NATSAP Table::
 | Encapsulated Data Length in bytes (32 bits)                        |
 | Encapsulated Application-Layer Traffic                             |
 
-## 4.2: Field Descriptions
+## Field Descriptions
 * Version: NATSAP protocol version (e.g., 0x01).
 * Flags: Reserved for future extensions.
 * Sub-Address: The 32-bit sub-address assigned by the NAT router.
