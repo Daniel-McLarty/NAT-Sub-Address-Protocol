@@ -60,19 +60,16 @@ NATSAP addresses this issue by introducing:
 
 {::boilerplate bcp14-tagged}
 
-NATSAP::
-    NAT Sub-Address Protocol
-DSAAP::
-    Dynamic Sub-Address Assignment Protocol
-CG NAT::
-    Carrier-Grade Network Address Translation
-Sub-Addres::
-    A unique 32-bit identifier assigned by the NAT router to an internal device.
-NATSAP Table::
-    A mapping table in the NAT router that associates sub-addresses with internal IPs.
+* **NATSAP**: NAT Sub-Address Protocol
+* **DSAAP**: Dynamic Sub-Address Assignment Protocol
+* **CG NAT**: Carrier-Grade Network Address Translation
+* **Sub-Address**: A unique 32-bit identifier assigned by the NAT router to an internal device.
+* **NATSAP Table**: A mapping table in the NAT router that associates sub-addresses with internal IPs.
 
 # Protocol Overview
+
 ## Protocol Flow
+
 1. Client Initialization (DSAAP)
     * When a device connects to the CG NAT network, it sends a DSAAP request to the gateway router.
     * The NAT router responds with a DSAAP reply, assigning a 32-bit sub-address to the client.
@@ -81,15 +78,15 @@ NATSAP Table::
 2. Service Advertising (DNS)
     * The client (or DDNS service) updates the NATSAP TXT record in DNS with its current sub-address.
     * Example DNS record:
-    ```
-    A: example.com → 203.0.113.5
-    TXT: _natsap.example.com → "example.com, ABCD-1234"
-    ```
+```
+A: example.com → 203.0.113.5  
+TXT: _natsap.example.com → "example.com, ABCD-1234"
+```
 
 3. Third-Party Client Connection
     * The external client resolves the public IP via the A record.
     * It looks up the _natsap TXT record for the sub-address.
-    * It forms the NATSAP socket: ` natsap://203.0.113.5\[ABCD-1234\]:443 `
+    * It forms the NATSAP socket: ``` natsap://203.0.113.5[ABCD-1234]:443 ```
 
 4. NATSAP Encapsulation
     * The external client encapsulates its application-layer traffic inside a NATSAP packet.
@@ -98,7 +95,9 @@ NATSAP Table::
     * On the return path, the router re-encapsulates the response and sends it back to the external client.
 
 # NATSAP Header Format
+
 ## NATSAP Header Structure
+
 | Field Name                                                         |
 |:------------------------------------------------------------------:|
 | Version (8 bits)                                                   |
@@ -109,23 +108,29 @@ NATSAP Table::
 | Encapsulated Application-Layer Traffic                             |
 
 ## Field Descriptions
-* Version: NATSAP protocol version (e.g., 0x01).
-* Flags: Reserved for future extensions.
-* Sub-Address: The 32-bit sub-address assigned by the NAT router.
-* Encapsulated Destination Port: The original application port.
-* Encapsulated Data Length: Length of the encapsulated payload.
-* Encapsulated Data: The original application-layer traffic.
+
+* **Version**: NATSAP protocol version (e.g., 0x01).
+* **Flags**: Reserved for future extensions.
+* **Sub-Address**: The 32-bit sub-address assigned by the NAT router.
+* **Encapsulated Destination Port**: The original application port.
+* **Encapsulated Data Length**: Length of the encapsulated payload.
+* **Encapsulated Data**: The original application-layer traffic.
 
 # Security Considerations
 
-1. Sub-Address Privacy:
-    * Sub-addresses are public, similar to ports.
-    * Applications should use existing encryption protocols (e.g., TLS) for security.
-2. Rate Limiting:
-    * The CG NAT router should rate-limit DSAAP requests to prevent abuse.
-3. Expiration and Reuse:
-    * Sub-addresses should have a lease time to prevent stale mappings.
-    * Routers should implement keep-alive mechanisms to verify active clients.
+## Sub-Address Privacy
+
+* Sub-addresses are public, similar to ports.
+* Applications should use existing encryption protocols (e.g., TLS) for security.
+
+## Rate Limiting
+
+* The CG NAT router should rate-limit DSAAP requests to prevent abuse.
+
+## Expiration and Reuse
+
+* Sub-addresses should have a lease time to prevent stale mappings.
+* Routers should implement keep-alive mechanisms to verify active clients.
 
 
 # IANA Considerations
