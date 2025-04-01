@@ -84,7 +84,7 @@ NATSAP Table::
     ```
     A: example.com → 203.0.113.5    
     TXT: _natsap.example.com → "example.com, ABCD-1234"
-    ``` 
+    ```
 
 3. Third-Party Client Connection
     * The external client resolves the public IP via the A record.
