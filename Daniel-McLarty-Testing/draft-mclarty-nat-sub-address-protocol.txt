@@ -2,7 +2,7 @@
 
 
 
-Network Address Translators                                   D. McLarty
+INTAREA                                                       D. McLarty
 Internet-Draft                                               Independent
 Intended status: Informational                              1 April 2025
 Expires: 3 October 2025
@@ -39,10 +39,10 @@ About This Document
    found at https://datatracker.ietf.org/doc/draft-mclarty-nat-sub-
    address-protocol/.
 
-   Discussion of this document takes place on the Network Address
-   Translators mailing list (mailto:nat@ietf.org), which is archived at
-   ftp://ftp.ietf.org/ietf-mail-archive/nat/.  Subscribe at
-   https://www.ietf.org/mailman/listinfo/nat/.
+   Discussion of this document takes place on the INTAREA Working Group
+   mailing list (mailto:int-area@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/int-area/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/int-area/.
 
    Source for this draft and an issue tracker can be found at
    https://github.com/Daniel-McLarty/NAT-Sub-Address-Protocol.
