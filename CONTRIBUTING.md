@@ -19,10 +19,9 @@ subject to a Simplified BSD License) in Contributions.
 
 ## Working Group Information
 
-Discussion of this work occurs on the [Network Address Translators
- mailing list](mailto:nat@ietf.org)
-([archive](ftp://ftp.ietf.org/ietf-mail-archive/nat/),
-[subscribe](nat-request@ietf.org)).
+Discussion of this work occurs on the [INTAREA mailing list](mailto:int-area@ietf.org)
+([archive](https://mailarchive.ietf.org/arch/browse/int-area/),
+[subscribe](int-area@ietf.org)).
 In addition to contributions in GitHub, you are encouraged to participate in
 discussions there.
 
@@ -30,4 +29,4 @@ discussions there.
 technical issues needs to occur on the mailing list.
 
 You might also like to familiarize yourself with other
-[ documents](https://datatracker.ietf.org/wg/nat/documents/).
+[ documents](https://datatracker.ietf.org/wg/intarea/documents/).
