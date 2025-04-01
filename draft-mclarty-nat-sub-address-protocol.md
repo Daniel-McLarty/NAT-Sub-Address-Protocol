@@ -89,7 +89,7 @@ NATSAP Table::
 3. Third-Party Client Connection
     * The external client resolves the public IP via the A record.
     * It looks up the _natsap TXT record for the sub-address.
-    * It forms the NATSAP socket: ` natsap://203.0.113.5[ABCD-1234]:443 `
+    * It forms the NATSAP socket: ` natsap://203.0.113.5\[ABCD-1234\]:443 `
 
 4. NATSAP Encapsulation
     * The external client encapsulates its application-layer traffic inside a NATSAP packet.
