@@ -37,7 +37,7 @@ informative:
 
 --- abstract
 
-This document defines the NAT Sub-Address Protocol (NATSAP), a Layer 5 encapsulation protocol designed to facilitate seamless bidirectional communication with devices behind Carrier-Grade NAT (CG NAT). NATSAP introduces dynamic sub-addresses assigned by the NAT router, which external clients can use alongside the public IP to route traffic back to internal devices without requiring traditional port forwarding. This document also defines the Dynamic Sub-Address Assignemnt Protocol (DSAAP), to facilitate the acquiring of a NATSAP Sub-Address.
+This document defines the NAT Sub-Address Protocol (NATSAP), a Layer 5 encapsulation protocol designed to facilitate seamless bidirectional communication with devices behind Carrier-Grade NAT (CG NAT). NATSAP introduces dynamic sub-addresses assigned by the NAT router, which external clients can use alongside the public IP to route traffic back to internal devices without requiring traditional port forwarding. This document also defines the Dynamic Sub-Address Assignment Protocol (DSAAP), to facilitate the acquiring of a NATSAP Sub-Address.
 
 The protocol offers backward compatibility with existing IPv4 infrastructure, efficient DNS-based service discovery, and simple, stateless mapping. By encapsulating application-layer traffic, NATSAP enables direct communication with devices behind NATs using a standardized socket notation and DNS records.
 
@@ -76,11 +76,11 @@ NATSAP addresses this issue by introducing:
     * The client stores the sub-address and uses it for external communication.
 
 2. Service Advertising (DNS)
-    * The client (or DDNS service) updates the NATSAP TXT record in DNS with its current sub-address.
+    * The client updates the NATSAP TXT record in DNS with its current sub-address.
     * Example DNS record:
 
 ```
-A: example.com → 203.0.113.5
+A: example.com → 192.0.2.20
 TXT: _natsap.example.com → "example.com, ABCD-1234"
 ```
 
@@ -92,8 +92,10 @@ TXT: _natsap.example.com → "example.com, ABCD-1234"
 4. NATSAP Encapsulation
     * The external client encapsulates its application-layer traffic inside a NATSAP packet.
     * The CG NAT router receives the packet, extracts the sub-address, and performs a table lookup to route the traffic to the appropriate internal device.
-    * The router de-encapsulates the traffic and forwards it to the internal client.
-    * On the return path, the router re-encapsulates the response and sends it back to the external client.
+    * The router forwards the traffic to the internal client.
+    * The internal client de-encapsulates the NATSAP packet and treats the application-layer traffic like normal.
+    * The internal client then sends a standard reply to the external client.
+    * If the external client has to send new traffic to the internal client the external client will build a new NATSAP packet.
 
 # NATSAP Header Format
 
@@ -106,12 +108,49 @@ TXT: _natsap.example.com → "example.com, ABCD-1234"
 | Encapsulated Data (variable)               | The original datagram traffic (e.g., https)      |
 
 
+# DNS Integration
+
+NATSAP uses DNS TXT records for service discovery.
+
+## DNS Record Format
+
+* A record: The public IP of the CG NAT router.
+* TXT record:
+    * Name: _natsap.FQDN
+    * Value: "FQDN, sub-address"
+
+## Example DNS Records
+
+```
+A: example.com → 192.0.2.20
+TXT: _natsap.example.com → "example.com, ABCD-1234"
+```
+Clients use the A record to find the public IP and the TXT record to retrieve the sub-address.
+
+# Socket Addressing Scheme
+NATSAP defines a new URI format for addressing services:
+
+``` natsap://<public-ip>[<sub-address>]:<original-port> ```
+
+Example URI: ``` natsap://192.0.2.20[ABCD-1234]:443 ```
+
+# Dynamic Sub-Address Assignment Protocol (DSAAP)
+
+TODO DSAAP
+
 # Security Considerations
 
 ## Sub-Address Privacy
 
 * Sub-addresses are public, similar to ports.
 * Applications should use existing encryption protocols (e.g., TLS) for security.
+
+# Backward Compatibility
+NATSAP is backward-compatible with existing IPv4 infrastructure:
+
+* No modifications to Layer 3 or Layer 4 protocols are required.
+* Non-NATSAP routers will simply drop unrecognized NATSAP packets.
+* Services using traditional ports remain unaffected.
 
 ## Rate Limiting
 
@@ -122,11 +161,10 @@ TXT: _natsap.example.com → "example.com, ABCD-1234"
 * Sub-addresses should have a lease time to prevent stale mappings.
 * Routers should implement keep-alive mechanisms to verify active clients.
 
-
 # IANA Considerations
 
-This document has no IANA actions.
-
+IANA may need to register both a TCP and UDP port to NATSAP.
+IANA may need to register a UDP port to DSAAP.
 
 --- back
 
